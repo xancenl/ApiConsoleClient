@@ -32,14 +32,14 @@ jobs:
           include-prerelease: true
 
       - name: Restore
-        run: dotnet restore ApiConsoleClient.sln
+        run: dotnet restore ApiConsoleClient.sln --configfile nuget.config
 
       - name: Build (Release)
-        run: dotnet build ApiConsoleClient.sln -c Release --no-restore
+        run: dotnet build ApiConsoleClient.sln -c Release --no-restore --configfile nuget.config
 
       - name: Test (Release) with Coverage (Coverlet Collector)
         run: >-
-          dotnet test ApiConsoleClient.sln -c Release --no-build
+          dotnet test ApiConsoleClient.sln -c Release --no-build --configfile nuget.config
           --logger "trx;LogFileName=test-results.trx"
           --collect:"XPlat Code Coverage"
 
