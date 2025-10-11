@@ -1,5 +1,8 @@
 # ApiConsoleClient
 
+![CI](https://github.com/xancenl/ApiConsoleClient/actions/workflows/dotnet-desktop.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/coverage-codecov-blue?logo=codecov)
+
 A .NET 9 console client that generates a strongly-typed API client and models from an OpenAPI (Swagger) spec and calls endpoints using Flurl.Http.
 
 This project is fully self-contained: it parses the OpenAPI document and generates the client code and DTOs inside the repo. Tests use xUnit and Flurl.Http.Testing.
@@ -71,6 +74,12 @@ If `--operation` is omitted, the app lists all available operationIds.
 ```powershell
  dotnet test ApiConsoleClient.sln -c Release --collect:"XPlat Code Coverage" --settings ApiConsoleClient.runsettings
 ```
+
+In CI, coverage is collected via Coverlet (collector) and summarized across OSes. A badge is generated in the GitHub Actions summary. You can add a static badge provider later if you publish coverage to a service.
+
+### Codecov
+
+Coverage reports are uploaded to Codecov if a repository secret named `CODECOV_TOKEN` is configured. After the first successful upload, you can replace the generic coverage badge above with a project-specific Codecov badge for accurate, real-time metrics.
 
 ## Adding/Re-generating Endpoints
 
