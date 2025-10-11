@@ -39,7 +39,7 @@ jobs:
 
       - name: Test (Release) with Coverage (Coverlet Collector)
         run: >-
-          dotnet test ApiConsoleClient.sln -c Release --no-build --configfile nuget.config
+          dotnet test ApiConsoleClient.sln -c Release --no-build --no-restore
           --logger "trx;LogFileName=test-results.trx"
           --collect:"XPlat Code Coverage"
 
