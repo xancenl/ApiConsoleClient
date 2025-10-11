@@ -1,0 +1,77 @@
+# .NET / Visual Studio
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+.vs/
+.xunit/
+TestResults/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.rsuser
+*.ncrunch*.
+_ReSharper*/
+*.DotSettings.user
+*.sln.ide/
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Rider / JetBrains
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+*.lcov
+*.coverage
+*.coveragexml
+.coverage/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Publish
+publish/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment & secrets
+.env
+.env.*
+*.secret
+
+# Tools/Generated artifacts
+src/**/obj/
+src/**/bin/
+tests/**/obj/
+tests/**/bin/
+tools/**/obj/
+tools/**/bin/
+
+# Cache
+*.cache
+.cache/
+
+# Azure/Other (optional)
+.localsettings.json
+ApiConsoleClient.runsettings
+
+# Docker temp files
+**/Dockerfile.*.temp
+
+# Rider solution metadata
+.idea/.idea.*

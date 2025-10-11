@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "ApiConsoleClient": {
+      "commandName": "Project",
+      "commandLineArgs": "--operation list --dump",
+      "environmentVariables": {
+        "API_BASE_URL": "https://api-v6.monta.nl"
+      }
+    }
+  }
+}
