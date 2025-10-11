@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   build:
@@ -61,9 +62,6 @@ jobs:
     needs: build
     env:
       MIN_COVERAGE: '30'
-      # Map secret to env so linters don't flag direct secrets reference below,
-      # and so forks without the secret simply skip the upload step
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout (for paths)
         uses: actions/checkout@v4
@@ -106,9 +104,7 @@ jobs:
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
-        if: ${{ env.CODECOV_TOKEN != '' }}
         with:
           files: coverage/Cobertura.xml
           flags: unittests
           name: codecov-coverage
-          token: ${{ env.CODECOV_TOKEN }}
