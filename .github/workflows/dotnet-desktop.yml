@@ -31,9 +31,6 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
           include-prerelease: true
 
-      - name: Restore dependencies
-        run: dotnet restore --use-lock-file
-
       - name: Restore
         run: dotnet restore ApiConsoleClient.sln
 
