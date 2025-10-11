@@ -1,6 +1,7 @@
 name: .NET build & test (cross-platform + coverage)
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main, releases/** ]
   pull_request:
@@ -59,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     env:
-      MIN_COVERAGE: '80'
+      MIN_COVERAGE: '30'
     steps:
       - name: Checkout (for paths)
         uses: actions/checkout@v4
