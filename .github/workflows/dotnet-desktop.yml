@@ -39,7 +39,7 @@ jobs:
 
       - name: Test (Release) with Coverage (Coverlet Collector)
         run: >-
-          dotnet test ApiConsoleClient.sln -c Release --no-build --no-restore
+          dotnet test ApiConsoleClient.sln -c Release --no-build --no-restore --settings coverlet.runsettings
           --logger "trx;LogFileName=test-results.trx"
           --collect:"XPlat Code Coverage"
 
@@ -91,7 +91,8 @@ jobs:
           filename: 'coverage/Cobertura.xml'
           badge: true
           fail_below_min: true
-          min_coverage: ${{ env.MIN_COVERAGE }}
+          # thresholds: [min fail threshold] [success threshold for green badge]
+          thresholds: ${{ env.MIN_COVERAGE }} 90
 
       - name: Upload merged coverage artifact
         uses: actions/upload-artifact@v4
