@@ -30,7 +30,6 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
           include-prerelease: true
-          cache: true
 
       - name: Restore dependencies
         run: dotnet restore --use-lock-file
@@ -47,13 +46,6 @@ jobs:
           --logger "trx;LogFileName=test-results.trx"
           --collect:"XPlat Code Coverage"
 
-      - name: Coverage Summary
-        if: always()
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: '**/TestResults/**/coverage.cobertura.xml'
-          badge: true
-          fail_below_min: false
 
       - name: Upload test results
         if: always()
