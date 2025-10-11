@@ -79,7 +79,7 @@ In CI, coverage is collected via Coverlet (collector) and summarized across OSes
 
 ### Codecov
 
-Coverage reports are uploaded to Codecov if a repository secret named `CODECOV_TOKEN` is configured. After the first successful upload, you can replace the generic coverage badge above with a project-specific Codecov badge for accurate, real-time metrics.
+CI uploads coverage to Codecov using tokenless OpenID Connect (no `CODECOV_TOKEN` needed). After the first successful upload, replace the generic coverage badge at the top with your project-specific Codecov badge for real‑time metrics.
 
 ## Adding/Re-generating Endpoints
 
