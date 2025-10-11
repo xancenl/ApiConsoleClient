@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net9.0": {
+      "Microsoft.OpenApi.Readers": {
+        "type": "Direct",
+        "requested": "[1.6.26, )",
+        "resolved": "1.6.26",
+        "contentHash": "K1LbHSIDzrb1GIYq40J5VMBoY3a+VUgYkVIeoWneD7gdKtFqbiECou1wCRX9XbsFYprfYRWsr1Gb3/x3WrSwxw==",
+        "dependencies": {
+          "Microsoft.OpenApi": "1.6.26",
+          "SharpYaml": "2.1.1"
+        }
+      },
+      "System.Text.Json": {
+        "type": "Direct",
+        "requested": "[9.0.9, )",
+        "resolved": "9.0.9",
+        "contentHash": "NEnpppwq67fRz/OvQRxsEMgetDJsxlxpEsAFO/4PZYbAyAMd4Ol6KS7phc8uDoKPsnbdzRLKobpX303uQwCqdg=="
+      },
+      "Microsoft.OpenApi": {
+        "type": "Transitive",
+        "resolved": "1.6.26",
+        "contentHash": "PEB41n0581OpMXcCe4SaKXIzX6T/kaTTbuBwt9U5rYjStm7Z5Mj4NWXnUG37idcCwy9Q4E+/u4m4RBdmMMjFBw=="
+      },
+      "SharpYaml": {
+        "type": "Transitive",
+        "resolved": "2.1.1",
+        "contentHash": "BISoFuW2AwZYXxrZGaBnedo21BvrdgC4kkWd6QYrOdhOGSsZB0RSqcBw09l9caUE1g3sykJoRfSbtSzZS6tYig=="
+      }
+    }
+  }
+}
