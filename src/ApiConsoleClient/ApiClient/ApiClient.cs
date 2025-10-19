@@ -77,15 +77,19 @@ internal partial class ApiClient : IApiClient
                     var len = call.Response?.ResponseMessage?.Content?.Headers?.ContentLength;
                     var status = (int?)call.Response?.StatusCode;
                     LogRequestEnd(_logger, requestId, status, call.Request.Verb?.Method, call.Request.Url, sw.ElapsedMilliseconds, len, null);
-                    _options.TelemetrySink?.OnRequestCompleted(new RequestCompleted
+                    // Emit completion only for successful responses (2xx)
+                    if (status is >= 200 and < 300)
                     {
-                        RequestId = requestId,
-                        Method = call.Request.Verb?.Method ?? "",
-                        Url = call.Request.Url?.ToString() ?? string.Empty,
-                        Status = status ?? 0,
-                        ElapsedMilliseconds = sw.ElapsedMilliseconds,
-                        ContentLength = len
-                    });
+                        _options.TelemetrySink?.OnRequestCompleted(new RequestCompleted
+                        {
+                            RequestId = requestId,
+                            Method = call.Request.Verb?.Method ?? "",
+                            Url = call.Request.Url?.ToString() ?? string.Empty,
+                            Status = status ?? 0,
+                            ElapsedMilliseconds = sw.ElapsedMilliseconds,
+                            ContentLength = len
+                        });
+                    }
                 })
                 .OnError(call =>
                 {
@@ -122,17 +126,21 @@ internal partial class ApiClient : IApiClient
             req = req
                 .AfterCall(call =>
                 {
-                    var len = call.Response?.ResponseMessage?.Content?.Headers?.ContentLength;
-                    var status = (int?)call.Response?.StatusCode ?? 0;
-                    _options.TelemetrySink!.OnRequestCompleted(new RequestCompleted
+                    // Emit completion only for successful responses (2xx)
+                    var status = (int?)call.Response?.StatusCode;
+                    if (status is >= 200 and < 300)
                     {
-                        RequestId = string.Empty,
-                        Method = call.Request.Verb?.Method ?? "",
-                        Url = call.Request.Url?.ToString() ?? string.Empty,
-                        Status = status,
-                        ElapsedMilliseconds = 0, // Not measured without verbose stopwatch
-                        ContentLength = len
-                    });
+                        var len = call.Response?.ResponseMessage?.Content?.Headers?.ContentLength;
+                        _options.TelemetrySink!.OnRequestCompleted(new RequestCompleted
+                        {
+                            RequestId = string.Empty,
+                            Method = call.Request.Verb?.Method ?? "",
+                            Url = call.Request.Url?.ToString() ?? string.Empty,
+                            Status = status ?? 0,
+                            ElapsedMilliseconds = 0, // Not measured without verbose stopwatch
+                            ContentLength = len
+                        });
+                    }
                 })
                 .OnError(call =>
                 {
@@ -162,9 +170,9 @@ internal partial class ApiClient : IApiClient
 
     private static async Task<ApiException> BuildApiExceptionAsync(FlurlHttpException ex)
     {
-        var status = (int?)ex.Call?.Response?.StatusCode ?? 0;
+    var status = (int?)(ex.Call?.Response?.StatusCode) ?? ex.StatusCode ?? 0;
         var reason = ex.Call?.Response?.ResponseMessage?.ReasonPhrase ?? ex.Message;
-        var body = ex.Call is not null ? await ex.Call.Response.GetStringAsync().ConfigureAwait(false) : string.Empty;
+        var body = ex.Call?.Response is not null ? await ex.Call.Response.GetStringAsync().ConfigureAwait(false) : string.Empty;
         object? problem = null;
         try
         {

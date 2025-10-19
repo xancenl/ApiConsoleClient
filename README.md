@@ -6,6 +6,7 @@
 A .NET 9 console client that generates a strongly-typed API client and models from an OpenAPI (Swagger) spec and calls endpoints using Flurl.Http.
 
 This project is fully self-contained: it parses the OpenAPI document and generates the client code and DTOs inside the repo. Tests use xUnit and Flurl.Http.Testing.
+The HTTP client is built on Flurl with structured logging, a verbose switch, correlation IDs, and a small telemetry abstraction.
 
 ## Prerequisites
 
@@ -72,14 +73,27 @@ If `--operation` is omitted, the app lists all available operationIds.
 ## Tests and Coverage
 
 ```powershell
- dotnet test ApiConsoleClient.sln -c Release --collect:"XPlat Code Coverage" --settings ApiConsoleClient.runsettings
+ dotnet test ApiConsoleClient.sln -c Release --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 ```
 
-In CI, coverage is collected via Coverlet (collector) and summarized across OSes. A badge is generated in the GitHub Actions summary. You can add a static badge provider later if you publish coverage to a service.
+Notes:
+
+- We use the coverlet data collector with a runsettings file that excludes generated code and DTOs from coverage (focuses the gate on testable behavior).
+- To produce a local text summary, install ReportGenerator and aggregate Cobertura outputs:
+
+  ```powershell
+  dotnet tool install -g dotnet-reportgenerator-globaltool
+  reportgenerator -reports:"tests/ApiConsoleClient.Tests/TestResults/**/coverage.cobertura.xml" -targetdir:"coverage" -reporttypes:"TextSummary;Cobertura"
+  Get-Content coverage/Summary.txt
+  ```
+
+In CI, coverage is collected via Coverlet (collector) on Windows/Linux/macOS and merged. A summary is uploaded as an artifact, and the job enforces a coverage gate.
 
 ### Codecov
 
 CI uploads coverage to Codecov using tokenless OpenID Connect (no `CODECOV_TOKEN` needed). After the first successful upload, replace the generic coverage badge at the top with your project-specific Codecov badge for real‑time metrics.
+
+The gate currently fails the workflow if merged line coverage is below 48%.
 
 ## Adding/Re-generating Endpoints
 
@@ -124,9 +138,10 @@ dotnet run --project src/ApiConsoleClient -- --operation GetHealth --verbose
 
 For custom metrics, you can provide an `IApiTelemetrySink` via `ApiClientOptions.TelemetrySink` to receive per-request completion/failure events with latency and sizes. This is useful for exporting to OpenTelemetry, Prometheus, or Application Insights.
 
-- Built-in examples:
-  - `ConsoleTelemetrySink` (enabled by setting `API_ENABLE_CONSOLE_TELEMETRY=true`)
-  - `OpenTelemetryAdapterSink` (emits Activities; requires your host to configure OpenTelemetry to collect them)
+Built-in examples:
+
+- `ConsoleTelemetrySink` (enabled by setting `API_ENABLE_CONSOLE_TELEMETRY=true`)
+- `OpenTelemetryAdapterSink` (emits Activities; requires your host to configure OpenTelemetry to collect them)
 
 ### Example environment file
 
