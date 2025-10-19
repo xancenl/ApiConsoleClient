@@ -95,6 +95,20 @@ jobs:
         run: |
           if [ -f coverage/Summary.txt ]; then cat coverage/Summary.txt; fi
 
+      - name: Extract merged line coverage
+        id: coverage_extract
+        shell: bash
+        run: |
+          if [ -f coverage/Summary.txt ]; then \
+            LINE=$(grep -oP 'Line coverage: \K[0-9.]+(?=%)' coverage/Summary.txt || true); \
+            echo "merged_line_rate=$LINE" >> "$GITHUB_OUTPUT"; \
+            {
+              echo "### Merged Coverage";
+              echo "";
+              echo "- Line coverage: ${LINE}%";
+            } >> "$GITHUB_STEP_SUMMARY"; \
+          fi
+
       - name: Coverage gate (fail if below minimum)
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
