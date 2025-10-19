@@ -27,11 +27,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: Setup .NET ${{ matrix.dotnet }} (include preview)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet }}
-          include-prerelease: true
+          dotnet-quality: 'preview'
 
       - name: Restore
         run: dotnet restore ApiConsoleClient.sln --configfile nuget.config
@@ -101,10 +109,13 @@ jobs:
         with:
           name: coverage-merged
           path: coverage/**
+          retention-days: 7
 
       - name: Upload to Codecov
+        if: ${{ success() }}
         uses: codecov/codecov-action@v4
         with:
           files: coverage/Cobertura.xml
           flags: unittests
           name: codecov-coverage
+          use_oidc: true
